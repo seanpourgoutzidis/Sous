@@ -1,0 +1,44 @@
+article {
+    height: 100%;
+    width: 100%;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin-block-start: 32px;
+}
+
+h1 {
+    font-size: 64px;
+    margin-block: 0;
+    color: white;
+}
+
+h2 {
+    font-size: 32px;
+    margin-block: 0;
+    color: white;
+}
+
+menu {
+    margin-block-start: 64px;
+}
+
+li {
+    list-style-type: none;
+    padding: 32px;
+    border: 2px solid white;
+    color: white;
+    font-size: 24px;
+    border-radius: 16px;
+    max-width: 600px;
+    margin-inline: auto;
+}
+
+li+li{
+    margin-block-start: 16px;
+}

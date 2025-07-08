@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+
+<article>
+    <header>
+        <h1>Sous</h1>
+        <h2>A Computer Vision Powered Recipe Reader</h2>
+    </header>
+
+    <menu>
+        <li>Quickstart</li>
+        <li>Pick from saved recipes</li>
+        <li>Add recipe</li>
+        <li>Quit Application</li>
+    </menu>
+</article>
+
+</body>
+</html>
+
+{% endblock %}
