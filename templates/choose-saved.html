@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='choose-saved.css') }}">
+</head>
+<body>
+
+<article>
+    <h1>Choose Saved</h1>
+    <ul>
+        {% for item in listToRender %}
+            <li class="{% if loop.index == currentIndex %} highlight {% endif %}">{{ item }}</li>
+        {% endfor %}
+    </ul>
+</article>
+
+{% endblock %}

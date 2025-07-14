@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='list.css') }}">
+</head>
+<body>
+
+<article>
+    <h1>{{ pageTitle }}</h1>
+    <ul>
+        {% for item in listToRender %}
+            <li class="{% if loop.index == len(listToRender)%} highlight {% endif %}">{{ item }}</li>
+        {% endfor %}
+    </ul>
+</article>
+
+{% endblock %}

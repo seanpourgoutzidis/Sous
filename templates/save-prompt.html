@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+
+<article>
+    <h1>Would you like to save this recipe?</h1>
+    <p>Touch your index and thumb to save</p>
+    <p>Touch your middle and thumb to continue without saving</p>
+</article>
+
+{% endblock %}

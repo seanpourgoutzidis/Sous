@@ -1,5 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+
 <form action="{{ url_for("inputPage")}}" method="post">
-    <label for="{{ formLabel }}">{{ formLabel }}</label>
-    <input type="text" id="{{ formLabel }}" name="input" placeholder="{{ formLabel }}">
+    <label for="name"></label>
+    <input type="text" name="name" id="name" placeholder="Recipe Name" value="{{ request.form['title'] }}"/>
+
+    <br>
+
+    <label for="ingredients"></label>
+    <textarea type="text" name="ingredients" id="ingredients" placeholder="Ingredients List" rows="10">{{ request.form['ingredients'] }}</textarea>
+
+    <br>
+
+    <label for="instructions"></label>
+    <textarea type="text" name="instructions" id="instructions" placeholder="Instructions List" rows="10">{{ request.form['instructions'] }}</textarea>
+
+    <br>
+
     <button type="submit">Proceed</button>
 </form>
+
+{% endblock %}

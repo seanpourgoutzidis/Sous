@@ -1,5 +1,16 @@
 <!doctype html>
 <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+<script>
+    console.log('Hello console');
+    var socket = io();
+    socket.on('connect', function() {
+        console.log('Socket Connected');
+    });
+    socket.on('redirect_client', function(data) {
+        window.location.href = data.url;
+    });
+</script>
 <title>{% block title %}{% endblock %}</title>
 <div>
     {% block content %}{% endblock %}

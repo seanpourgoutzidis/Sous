@@ -54,7 +54,7 @@ def IsMiddleTouchingThumb():
 def IsPinkyTouchingThumb():
     return not(PinkyStates.isZero()) and abs(PinkyStates.x - ThumbStates.x) < THRESHOLD / 2 and abs(PinkyStates.y - ThumbStates.y) < THRESHOLD / 2
 
-def getUserInput(validOptions):
+def getUserInput():
 
 	global IndexStates
 	global MiddleStates
@@ -93,15 +93,15 @@ def getUserInput(validOptions):
 				if timeSinceLastInput < 2:
 					break
 	            
-				if (IsPinchGesture() and CVInput.PINCH in validOptions):
+				if (IsPinchGesture()):
 					timeOfLastInput = time.time()
 					return CVInput.PINCH
-				elif (IsIndexTouchingThumb() and CVInput.INDEX in validOptions):
+				elif (IsIndexTouchingThumb()):
 					timeOfLastInput = time.time()
 					return CVInput.INDEX
-				elif (IsMiddleTouchingThumb() and CVInput.MIDDLE in validOptions):
+				elif (IsMiddleTouchingThumb()):
 					timeOfLastInput = time.time()
 					return CVInput.MIDDLE
-				elif (IsPinkyTouchingThumb() and CVInput.PINKY in validOptions):
+				elif (IsPinkyTouchingThumb()):
 					timeOfLastInput = time.time()
 					return CVInput.PINKY
