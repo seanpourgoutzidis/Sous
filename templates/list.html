@@ -13,7 +13,11 @@
     <h1>{{ pageTitle }}</h1>
     <ul>
         {% for item in listToRender %}
-            <li class="{% if loop.index == len(listToRender)%} highlight {% endif %}">{{ item }}</li>
+            {% if loop.index == currentIndex + 1 %}
+                <li class="highlight">{{ loop.index }} | {{ currentIndex }} | {{ item }}</li>
+            {% else %}
+                <li>{{ loop.index }} | {{ currentIndex }} | {{ item }}</li>
+            {% endif %}
         {% endfor %}
     </ul>
 </article>

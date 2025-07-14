@@ -48,7 +48,7 @@ def getSavedRecipes():
 	recipeFile.close()
 
 	if recipeText == "":
-		return
+		return []
 
 	recipeList = recipeText.split(interRecipeDelimeter)
 
@@ -67,3 +67,5 @@ def getSavedRecipes():
 		localInstructions = components[2].splitlines()
 
 		savedRecipes.append(Recipe(name, localIngredients, localInstructions))
+	
+	return savedRecipes

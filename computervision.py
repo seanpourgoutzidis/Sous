@@ -90,8 +90,8 @@ def getUserInput():
 				PinkyStates = Coordinate(int(pinky_tip.x * screen_width), int(pinky_tip.y * screen_height))
 
 				timeSinceLastInput = time.time() - timeOfLastInput
-				if timeSinceLastInput < 2:
-					break
+				if timeSinceLastInput > 3:
+					return None
 	            
 				if (IsPinchGesture()):
 					timeOfLastInput = time.time()
