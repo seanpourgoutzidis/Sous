@@ -25,7 +25,6 @@ def resetState():
     
 # Get Input
 def trackGestures():
-    print('Tracking Gestures')
     global STATE
 
     newInput = getUserInput()
@@ -40,7 +39,6 @@ def trackGestures():
             if (newInput == CVInput.INDEX):
                 STATE.currentFlow = Flows.QUICKSTART
                 STATE.currentPage = AppPages.INPUT
-                print('redirecting to input')
                 socketio.emit('redirect_client', {'url': '/input'})
             elif (newInput == CVInput.MIDDLE):
                 STATE.currentFlow = Flows.CHOOSESAVED
@@ -74,7 +72,11 @@ def trackGestures():
             elif (newInput == CVInput.INDEX and STATE.currentListIndex == len(STATE.currentRecipe.instructions) - 1):
                 STATE.currentListIndex = 0
                 STATE.currentPage = AppPages.SAVEPROMPT
-                socketio.emit('redirect_client', {'url': '/save'})
+                if STATE.currentFlow == Flows.CHOOSESAVED:
+                    resetState()
+                    socketio.emit('redirect_client', {'url': '/done'})
+                else:
+                    socketio.emit('redirect_client', {'url': '/save'})
             elif (newInput == CVInput.PINCH):
                 resetState()
                 socketio.emit('redirect_client', {'url': '/'})
@@ -90,6 +92,12 @@ def trackGestures():
                 socketio.emit('redirect_client', {'url': '/'})
             elif (newInput == CVInput.PINCH):
                 resetState()
+                socketio.emit('redirect_client', {'url': '/'})
+        case AppPages.SAVECONFIRMATION:
+            print('Save Confirmation')
+            if (newInput == CVInput.INDEX):
+                resetState()
+                STATE.currentPage = AppPages.HOME
                 socketio.emit('redirect_client', {'url': '/'})
         case AppPages.SAVECONFIRMATION:
             print('Save Confirmation')
@@ -118,7 +126,6 @@ def trackGestures():
                 resetState()
                 socketio.emit('redirect_client', {'url': '/'})
 
-    print('State after transition - ', STATE)
     return
 
 # Setup Cron Job to Get Input from Webcam
@@ -137,16 +144,10 @@ def home():
 @app.route('/input', methods =["GET", "POST"])
 def inputPage():
 
-    print('in input')
-
     if request.method == 'POST':
         recipeNameInput = request.form['name']
         ingredientsInput = request.form['ingredients']
         instructionsInput = request.form['instructions']
-
-        print('Recipe Name - ', recipeNameInput)
-        print('Ingredients - ', ingredientsInput)
-        print('Instructions - ', instructionsInput)
 
         if not recipeNameInput or not ingredientsInput or not instructionsInput:
             flash('Error! Make sure all fields are filled')
@@ -175,32 +176,45 @@ def inputPage():
             STATE.currentRecipe = Recipe(recipeNameInput, ingredients, instructions)
             STATE.currentPage = AppPages.LISTINGREDIENTS
             return redirect('/list?displaying=ingredients')
+        
+    pageTitle = "Input Recipe to QuickStart"
+    if (STATE.currentFlow == Flows.SAVE):
+        pageTitle = "Input Recipe to Save"
             
-
-    print('rendering input template')
-    return render_template('input.html')
+    return render_template('input.html', pageTitle=pageTitle)
 
 @app.route('/list')
 def listPage():
     displaying = request.args.get('displaying')
 
-    print('Displaying - ', displaying)
-
     itemsToRender = []
 
     if (displaying == "ingredients"):
-        itemsToRender = STATE.currentRecipe.ingredients[:STATE.currentListIndex + 1]
+        itemsToRender = STATE.currentRecipe.ingredients
     elif (displaying == "instructions"):
-        itemsToRender = STATE.currentRecipe.instructions[:STATE.currentListIndex + 1]
+        itemsToRender = STATE.currentRecipe.instructions
 
-    print("Items to Render - ", itemsToRender)
+    currentListIndex = STATE.currentListIndex
+    if STATE.currentListIndex > 0 and STATE.currentListIndex < len(STATE.savedRecipes) - 1:
+        itemsToRender = itemsToRender[STATE.currentListIndex-1:STATE.currentListIndex+2]
+        currentListIndex = 1
+    elif len(itemsToRender) > 3:
+        itemsToRender = itemsToRender[:3]
+        currentListIndex = 0
     
-    return render_template('list.html', listToRender=itemsToRender, pageTitle=displaying, currentIndex=STATE.currentListIndex)
+    return render_template('list.html', listToRender=itemsToRender, pageTitle=displaying.capitalize(), currentIndex=currentListIndex)
 
 @app.route('/select-saved')
 def selectSaved():
-    print('Saved Recipes - ', STATE.savedRecipes)
-    return render_template('choose-saved.html', listToRender=STATE.savedRecipes, currentIndex=STATE.currentListIndex)
+    listToRender = STATE.savedRecipes
+    currentListIndex = STATE.currentListIndex
+    if STATE.currentListIndex > 0 and STATE.currentListIndex < len(STATE.savedRecipes) - 1:
+        listToRender = STATE.savedRecipes[STATE.currentListIndex-1:STATE.currentListIndex+2]
+        currentListIndex = 1
+    elif len(STATE.savedRecipes) > 3:
+        listToRender = STATE.savedRecipes[:3]
+        currentListIndex = 0
+    return render_template('choose-saved.html', listToRender=listToRender, currentIndex=currentListIndex)
 
 @app.route('/save')
 def savePrompt():
@@ -210,7 +224,9 @@ def savePrompt():
 def savedConfirmation():
     return render_template('saved-confirmation.html')
 
-
+@app.route('/done')
+def savedConfirmation():
+    return render_template('done.html')
 
 if __name__ == '__main__':
    STATE.savedRecipes = getSavedRecipes()

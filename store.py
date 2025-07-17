@@ -58,13 +58,15 @@ def getSavedRecipes():
 	for recipe in recipeList:
 		components = recipe.split(intraRecipeDelimeter)
 
-		# If it's whitespace, continue to handle the last line
+		# If it's whitespace, continue (to handle the last line)
 		if (components[0] == '\n'):
 			continue
 
 		name = components[0].replace("|", "")
 		localIngredients = components[1].splitlines()
+		localIngredients.remove('')
 		localInstructions = components[2].splitlines()
+		localInstructions.remove('')
 
 		savedRecipes.append(Recipe(name, localIngredients, localInstructions))
 	

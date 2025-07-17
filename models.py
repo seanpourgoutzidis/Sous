@@ -25,6 +25,7 @@ class AppPages(Enum):
     SAVEPROMPT = "save-prompt"
     SAVECONFIRMATION = "save-confirmation"
     SELECTSAVED = "select-saved"
+    DONE = "done"
 
 class Flows(Enum):
     QUICKSTART = "quickstart"

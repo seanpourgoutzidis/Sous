@@ -11,7 +11,7 @@
 
 <article>
     <h1>Choose Saved</h1>
-    <ul>
+    <menu>
         {% if listToRender|length == 0 %}
             <p>No Saved Recipes. Pinch to go back to home</p>
         {% else %}
@@ -23,7 +23,7 @@
                 {% endif %}
             {% endfor %}
         {% endif %}
-    </ul>
+    </menu>
 </article>
 
 {% endblock %}

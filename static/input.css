@@ -1,0 +1,38 @@
+h1 {
+    font-size: 48px;
+    margin-block: 32px 8px;
+    color: white;
+    text-align: center;
+}
+
+form {
+    display: block;
+    margin-block-start: 32px;
+    margin-inline: 64px;
+}
+
+label {
+    display: block;
+    color: white;
+    font-size: 32px;
+    margin-block-end: 4px;
+}
+
+input, textarea {
+    display: block;
+    width: 100%;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+button {
+    background-color: #1E1E1E;
+    border: 2px solid white;
+    border-radius: 16px;
+    color: white;
+    font-size: 24px;
+    padding: 16px;
+    display: block;
+    margin-inline: auto;
+}
+

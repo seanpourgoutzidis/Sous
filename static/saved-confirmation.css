@@ -1,0 +1,20 @@
+article {
+    height: 100dvh;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h1 {
+    margin-block: 0, 32px;
+    font-size: 64px;
+    color: white;
+}
+
+p {
+    margin-block: 8px;
+    font-size: 32px;
+    color: white;
+}
