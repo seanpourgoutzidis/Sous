@@ -225,7 +225,7 @@ def savedConfirmation():
     return render_template('saved-confirmation.html')
 
 @app.route('/done')
-def savedConfirmation():
+def done():
     return render_template('done.html')
 
 if __name__ == '__main__':

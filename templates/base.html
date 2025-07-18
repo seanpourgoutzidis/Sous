@@ -8,11 +8,7 @@
         console.log('Socket Connected');
     });
     socket.on('redirect_client', function(data) {
-        console.log('Redirect Request Received.');
-        console.log('Current Url - ', window.location.href);
-        console.log('Desired Url - ', data.url);
         if (window.location.href === data.url) {
-            console.log('Refreshing');
             window.location.reload();
         }
 
