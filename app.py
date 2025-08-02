@@ -1,11 +1,12 @@
 # External Libraries
-from flask import Flask, render_template, redirect, url_for, request, flash, current_app
+from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
-import requests
 from blinker import Namespace, signal
 from flask_socketio import SocketIO, emit
+import os
+import signal
 
 # Internal Libraries
 from computervision import getUserInput, CVInput, cap, cv2
@@ -51,7 +52,7 @@ def trackGestures():
                 STATE.savedRecipes = getSavedRecipes()
                 socketio.emit('redirect_client', {'url': '/input'})
             elif (newInput == CVInput.PINCH):
-                exit()
+                socketio.emit('redirect_client', {'url': '/shutdown'})
         case AppPages.LISTINGREDIENTS:
             print('Ingredients')
             if (newInput == CVInput.INDEX and STATE.currentListIndex < len(STATE.currentRecipe.ingredients) - 1):
@@ -126,7 +127,6 @@ def trackGestures():
                 resetState()
                 socketio.emit('redirect_client', {'url': '/'})
 
-    return
 
 # Setup Cron Job to Get Input from Webcam
 sched = BackgroundScheduler(daemon=True)
@@ -227,6 +227,14 @@ def savedConfirmation():
 @app.route('/done')
 def done():
     return render_template('done.html')
+
+def shutdown_server():
+    os.kill(os.getpid(), signal.SIGINT)
+    
+@app.route('/shutdown')
+def shutdown():
+    shutdown_server()
+    return render_template('shutdown.html')
 
 if __name__ == '__main__':
    STATE.savedRecipes = getSavedRecipes()
