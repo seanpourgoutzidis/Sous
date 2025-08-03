@@ -8,6 +8,7 @@ class AppState:
         self.currentPage = currentPage
         self.currentListIndex = currentListIndex
         self.savedRecipes = savedRecipes
+        self.openedBrowser = False
     def isCVInputPage(self):
         return False
 

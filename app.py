@@ -7,6 +7,7 @@ from blinker import Namespace, signal
 from flask_socketio import SocketIO, emit
 import os
 import signal
+import webbrowser
 
 # Internal Libraries
 from computervision import getUserInput, CVInput, cap, cv2
@@ -23,10 +24,18 @@ STATE = AppState(Flows.QUICKSTART, Recipe('', [], []), AppPages.HOME, 0, savedRe
 def resetState():
     global STATE
     STATE = AppState(Flows.QUICKSTART, Recipe('', [], []), AppPages.HOME, 0, savedRecipes)
+
+def open_browser():
+    print('Opening browser')
+    webbrowser.open_new("http://127.0.0.1:5000")
     
 # Get Input
 def trackGestures():
     global STATE
+
+    if not(STATE.openedBrowser):
+        STATE.openedBrowser = True
+        open_browser()
 
     newInput = getUserInput()
     print('Input Received - ', newInput)
@@ -150,7 +159,6 @@ def inputPage():
         instructionsInput = request.form['instructions']
 
         if not recipeNameInput or not ingredientsInput or not instructionsInput:
-            flash('Error! Make sure all fields are filled')
             print('Error! Make sure all fields are filled')
             return
 
@@ -163,7 +171,6 @@ def inputPage():
 
         isDup, reason = isRecipeInDatabase(recipeNameInput, ingredients, instructions)
         if isDup:
-            flash('Recipe already in database')
             print('Recipe already in database - ', reason)
             resetState()
             return redirect('/')
