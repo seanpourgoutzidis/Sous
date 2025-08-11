@@ -1,0 +1,6 @@
+flask
+flask-socketio
+apscheduler
+opencv-python
+mediapipe
+pyautogui

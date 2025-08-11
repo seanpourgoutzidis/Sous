@@ -1,13 +1,12 @@
 # External Libraries
-from flask import Flask, render_template, redirect, url_for, request
-from flask_bootstrap import Bootstrap
+from flask import Flask, render_template, redirect, request
 from apscheduler.schedulers.background import BackgroundScheduler
 import atexit
-from blinker import Namespace, signal
 from flask_socketio import SocketIO, emit
 import os
 import signal
 import webbrowser
+import subprocess
 
 # Internal Libraries
 from computervision import getUserInput, CVInput, cap, cv2
@@ -16,10 +15,10 @@ from models import AppState, Recipe, AppPages, Flows
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'oooooooyouwannaguessmesobad'
-bootstrap = Bootstrap(app)
 socketio = SocketIO(app)
 
 STATE = AppState(Flows.QUICKSTART, Recipe('', [], []), AppPages.HOME, 0, savedRecipes)
+openedBrowser = False
 
 def resetState():
     global STATE
@@ -32,9 +31,10 @@ def open_browser():
 # Get Input
 def trackGestures():
     global STATE
+    global openedBrowser
 
-    if not(STATE.openedBrowser):
-        STATE.openedBrowser = True
+    if not(openedBrowser):
+        openedBrowser = True
         open_browser()
 
     newInput = getUserInput()
@@ -83,7 +83,7 @@ def trackGestures():
                 STATE.currentListIndex = 0
                 STATE.currentPage = AppPages.SAVEPROMPT
                 if STATE.currentFlow == Flows.CHOOSESAVED:
-                    resetState()
+                    STATE.currentPage = AppPages.DONE
                     socketio.emit('redirect_client', {'url': '/done'})
                 else:
                     socketio.emit('redirect_client', {'url': '/save'})
@@ -135,6 +135,10 @@ def trackGestures():
             if (newInput == CVInput.PINCH):
                 resetState()
                 socketio.emit('redirect_client', {'url': '/'})
+        case AppPages.DONE:
+            if (newInput == CVInput.INDEX or newInput == CVInput.PINCH):
+                resetState()
+                socketio.emit('redirect_client', {'url': '/'})
 
 
 # Setup Cron Job to Get Input from Webcam
@@ -160,7 +164,8 @@ def inputPage():
 
         if not recipeNameInput or not ingredientsInput or not instructionsInput:
             print('Error! Make sure all fields are filled')
-            return
+            subprocess.run(["say", "Error! Make sure all fields are filled"])
+            return render_template('input.html', pageTitle=pageTitle)
 
         ingredients = []
         ingredients = ingredientsInput.splitlines()
@@ -172,6 +177,7 @@ def inputPage():
         isDup, reason = isRecipeInDatabase(recipeNameInput, ingredients, instructions)
         if isDup:
             print('Recipe already in database - ', reason)
+            subprocess.run(["say", "Recipe already in database, taking you back to homepage"])
             resetState()
             return redirect('/')
         
@@ -240,6 +246,7 @@ def shutdown_server():
     
 @app.route('/shutdown')
 def shutdown():
+    subprocess.run(["say", "Shutting down"])
     shutdown_server()
     return render_template('shutdown.html')
 
