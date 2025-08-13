@@ -8,6 +8,10 @@ I built this as I have been getting into cooking recently and hate having to sto
 Sous is a Flask-based application that uses OpenCV and MediaPipe to track the user's hand gestures for input. It is a Flask server with a finite state machine that uses gestures to move between states and serve HTML to the browser.
 A web-socket handles redirection and refreshes
 
+### Finite State Machine
+
+<img width="2244" height="693" alt="SousFSM" src="https://github.com/user-attachments/assets/e2fb3993-21cf-4d93-a6cd-6380345591a6" />
+
 ## How to install
 
 1. Clone the repo `git clone https://github.com/seanpourgoutzidis/Sous.git`
